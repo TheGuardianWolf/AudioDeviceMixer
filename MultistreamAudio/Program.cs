@@ -17,14 +17,23 @@ namespace MultistreamAudio
 
             var outputDevices = DeviceService.GetOutputDevices().ToList();
             var defaultOutputDevice = DeviceService.DefaultPlaybackDevice;
+            Console.WriteLine("Devices available:");
+            for (var i = 0; i < outputDevices.Count; i++)
+            {
+                var device = outputDevices[i];
+                if (device.ID != defaultOutputDevice.ID)
+                {
+                    Console.WriteLine($"{i + 1} - {device.FriendlyName}");
+                }
+            }
 
-            Console.WriteLine("Enter part of or the whole name of an output device to assign as the left speaker.");
-            var leftDeviceName = Console.ReadLine();
-            var leftDevice = outputDevices.Single(device => device.FriendlyName.ToLower().Contains(leftDeviceName.ToLower()));
+            Console.WriteLine("Enter the id of the output device to assign as the left speaker.");
+            var leftDeviceIndex = int.Parse(Console.ReadLine()) - 1;
+            var leftDevice = outputDevices[leftDeviceIndex];
 
-            Console.WriteLine("Enter part of or the whole name of an output device to assign as the right speaker.");
-            var rightDeviceName = Console.ReadLine();
-            var rightDevice = outputDevices.Single(device => device.FriendlyName.ToLower().Contains(rightDeviceName.ToLower()));
+            Console.WriteLine("Enter the id of the output device to assign as the right speaker.");
+            var rightDeviceIndex = int.Parse(Console.ReadLine()) - 1;
+            var rightDevice = outputDevices[rightDeviceIndex];
 
             Console.WriteLine("Connecting processing pipeline...");
             var pipe = new MultiOutputAudioPipe(
